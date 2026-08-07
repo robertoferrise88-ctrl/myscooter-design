@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#07090d">
+
+    <title>My Scooter</title>
+
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg: #07090d;
+            --panel: #0d1117;
+            --panel2: #11161e;
+            --border: #202832;
+            --text: #f5f7fa;
+            --muted: #707b89;
+            --blue: #5b8cff;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            background: var(--bg);
+        }
+
+        body {
+            color: var(--text);
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "SF Pro Display",
+                "SF Pro Text",
+                Arial,
+                sans-serif;
+
+            overflow-x: hidden;
+        }
+
+        /* BACKGROUND */
+
+        body::before {
+            content: "";
+
+            position: fixed;
+
+            width: 600px;
+            height: 600px;
+
+            left: 50%;
+            top: -400px;
+
+            transform: translateX(-50%);
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(72, 115, 255, 0.10),
+                    transparent 68%
+                );
+
+            filter: blur(25px);
+
+            pointer-events: none;
+        }
+
+        body::after {
+            content: "";
+
+            position: fixed;
+
+            width: 700px;
+            height: 500px;
+
+            left: 50%;
+            bottom: -350px;
+
+            transform: translateX(-50%);
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(50, 100, 255, 0.06),
+                    transparent 70%
+                );
+
+            filter: blur(35px);
+
+            pointer-events: none;
+        }
+
+        /* APP */
+
+        .app {
+            position: relative;
+            z-index: 1;
+
+            width: 100%;
+            max-width: 520px;
+
+            margin: auto;
+
+            padding:
+                20px
+                18px
+                45px;
+        }
+
+        /* TOP BAR */
+
+        .topbar {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 25px;
+        }
+
+        .logo {
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 14px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #1b2430,
+                    #10151c
+                );
+
+            border: 1px solid #29323d;
+
+            font-size: 22px;
+        }
+
+        .logo-title {
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-subtitle {
+            margin-top: 2px;
+
+            color: var(--muted);
+
+            font-size: 10px;
+        }
+
+        .menu {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 13px;
+
+            background: #0e1319;
+
+            border: 1px solid #202832;
+
+            font-size: 19px;
+        }
+
+        /* SCOOTER HERO */
+
+        .hero {
+            position: relative;
+
+            height: 255px;
+
+            overflow: hidden;
+
+            border-radius: 30px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #151c25,
+                    #0b0f14
+                );
+
+            border: 1px solid #242d37;
+
+            box-shadow:
+                0 25px 70px rgba(0,0,0,0.40);
+        }
+
+        .hero-glow {
+            position: absolute;
+
+            width: 260px;
+            height: 260px;
+
+            right: -90px;
+            top: -100px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(82,126,255,0.13),
+                    transparent 68%
+                );
+
+            filter: blur(10px);
+        }
+
+        .hero-label {
+            position: absolute;
+
+            left: 22px;
+            top: 22px;
+
+            color: #778391;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            letter-spacing: 1.5px;
+        }
+
+        .hero-scooter {
+            position: absolute;
+
+            left: 50%;
+            top: 62px;
+
+            transform: translateX(-50%);
+
+            font-size: 82px;
+
+            filter:
+                drop-shadow(
+                    0 15px 20px
+                    rgba(0,0,0,0.45)
+                );
+
+            opacity: 0.95;
+        }
+
+        .hero-status {
+            position: absolute;
+
+            left: 22px;
+            bottom: 20px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: #8994a2;
+
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #606a76;
+        }
+
+        /* SPEED */
+
+        .speed-section {
+            display: flex;
+
+            align-items: flex-end;
+            justify-content: space-between;
+
+            margin-top: 25px;
+
+            padding:
+                0
+                4px;
+        }
+
+        .speed-label {
+            color: var(--muted);
+
+            font-size: 10px;
+            font-weight: 700;
+
+            letter-spacing: 1.5px;
+        }
+
+        .speed {
+            margin-top: 3px;
+
+            font-size: 82px;
+
+            line-height: 0.9;
+
+            font-weight: 800;
+
+            letter-spacing: -6px;
+        }
+
+        .speed-unit {
+            padding-bottom: 7px;
+
+            color: #737f8d;
+
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* BATTERY */
+
+        .battery-card {
+            margin-top: 25px;
+
+            padding: 20px;
+
+            border-radius: 23px;
+
+            background: var(--panel);
+
+            border: 1px solid var(--border);
+        }
+
+        .battery-header {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .battery-title {
+            color: #788492;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            letter-spacing: 1.4px;
+        }
+
+        .battery-value {
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .battery-track {
+            height: 10px;
+
+            margin-top: 16px;
+
+            overflow: hidden;
+
+            border-radius: 20px;
+
+            background: #242b34;
+        }
+
+        .battery-fill {
+            width: 0%;
+
+            height: 100%;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #527fff,
+                    #79a0ff
+                );
+
+            transition: width 0.5s ease;
+        }
+
+        /* STATS */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 10px;
+
+            margin-top: 12px;
+        }
+
+        .stat {
+            min-height: 100px;
+
+            padding: 15px;
+
+            border-radius: 20px;
+
+            background: var(--panel);
+
+            border: 1px solid var(--border);
+        }
+
+        .stat-icon {
+            font-size: 15px;
+
+            margin-bottom: 13px;
+        }
+
+        .stat-title {
+            color: #687482;
+
+            font-size: 9px;
+            font-weight: 700;
+
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            margin-top: 5px;
+
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        /* ACTION AREA */
+
+        .actions {
+            margin-top: 25px;
+        }
+
+        .section-title {
+            margin-bottom: 11px;
+
+            color: #687482;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            letter-spacing: 1.5px;
+        }
+
+        button {
+            width: 100%;
+            height: 58px;
+
+            margin-top: 10px;
+
+            border-radius: 18px;
+
+            font-size: 15px;
+            font-weight: 750;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.15s ease,
+                opacity 0.15s ease;
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
+        .connect {
+            color: #080a0e;
+
+            background: #f5f7fa;
+
+            border: none;
+
+            box-shadow:
+                0 12px 35px
+                rgba(255,255,255,0.08);
+        }
+
+        .qr {
+            color: white;
+
+            background: #121820;
+
+            border: 1px solid #29333f;
+        }
+
+        .stop {
+            color: #737e8b;
+
+            background: #0b0f14;
+
+            border: 1px solid #202832;
+        }
+
+        /* QR */
+
+        #qr-reader {
+            display: none;
+
+            margin-top: 14px;
+
+            overflow: hidden;
+
+            border-radius: 20px;
+
+            background: #090d12;
+
+            border: 1px solid #252e39;
+        }
+
+        #qr-reader video {
+            width: 100% !important;
+        }
+
+        .qr-result {
+            display: none;
+
+            margin-top: 12px;
+
+            padding: 16px;
+
+            border-radius: 18px;
+
+            background: #10151b;
+
+            border: 1px solid #252e39;
+
+            font-size: 13px;
+
+            color: #9aa5b2;
+
+            word-break: break-all;
+        }
+
+        .qr-result b {
+            display: block;
+
+            margin-bottom: 6px;
+
+            color: white;
+        }
+
+        /* DEVICE */
+
+        .device {
+            display: none;
+
+            margin-top: 12px;
+
+            padding: 16px;
+
+            border-radius: 18px;
+
+            background: #10151b;
+
+            border: 1px solid #252e39;
+
+            color: #d8dde4;
+
+            font-size: 13px;
+        }
+
+        /* ERROR */
+
+        .error {
+            margin-top: 12px;
+
+            color: #ff6666;
+
+            font-size: 12px;
+
+            line-height: 1.4;
+        }
+
+        @media (max-width: 390px) {
+
+            .speed {
+                font-size: 70px;
+            }
+
+            .hero {
+                height: 235px;
+            }
+
+            .hero-scooter {
+                font-size: 70px;
+            }
+
+            .stat {
+                padding: 13px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- TOP -->
+
+    <div class="topbar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                🛴
+            </div>
+
+            <div>
+
+                <div class="logo-title">
+                    MY SCOOTER
+                </div>
+
+                <div class="logo-subtitle">
+                    SMART SCOOTER CONTROL
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="menu">
+            ⋯
+        </div>
+
+    </div>
+
+
+    <!-- HERO -->
+
+    <div class="hero">
+
+        <div class="hero-glow"></div>
+
+        <div class="hero-label">
+            YOUR SCOOTER
+        </div>
+
+        <div class="hero-scooter">
+            🛴
+        </div>
+
+        <div class="hero-status">
+
+            <div
+                class="status-dot"
+                id="statusDot"
+            ></div>
+
+            <span id="status">
+                Nicht verbunden
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- SPEED -->
+
+    <div class="speed-section">
+
+        <div>
+
+            <div class="speed-label">
+                AKTUELLE GESCHWINDIGKEIT
+            </div>
+
+            <div
+                class="speed"
+                id="speed"
+            >
+                0.0
+            </div>
+
+        </div>
+
+        <div class="speed-unit">
+            KM/H
+        </div>
+
+    </div>
+
+
+    <!-- BATTERY -->
+
+    <div class="battery-card">
+
+        <div class="battery-header">
+
+            <div class="battery-title">
+                BATTERIE
+            </div>
+
+            <div
+                class="battery-value"
+                id="battery"
+            >
+                -- %
+            </div>
+
+        </div>
+
+        <div class="battery-track">
+
+            <div
+                class="battery-fill"
+                id="batteryFill"
+            ></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- STATS -->
+
+    <div class="stats">
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                📍
+            </div>
+
+            <div class="stat-title">
+                DISTANZ
+            </div>
+
+            <div
+                class="stat-value"
+                id="distance"
+            >
+                -- km
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                ⚡
+            </div>
+
+            <div class="stat-title">
+                STATUS
+            </div>
+
+            <div
+                class="stat-value"
+                id="online"
+            >
+                OFFLINE
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                🔋
+            </div>
+
+            <div class="stat-title">
+                AKKU
+            </div>
+
+            <div
+                class="stat-value"
+                id="batterySmall"
+            >
+                -- %
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACTIONS -->
+
+    <div class="actions">
+
+        <div class="section-title">
+            SCOOTER VERWALTEN
+        </div>
+
+
+        <button
+            class="qr"
+            onclick="startQRScanner()"
+        >
+            📷 &nbsp; QR-Code scannen
+        </button>
+
+
+        <div id="qr-reader"></div>
+
+
+        <div
+            class="qr-result"
+            id="qrResult"
+        >
+
+            <b>
+                Scooter-ID
+            </b>
+
+            <span id="qrText"></span>
+
+        </div>
+
+
+        <button
+            class="connect"
+            onclick="connectScooter()"
+        >
+            🔵 &nbsp; Scooter verbinden
+        </button>
+
+
+        <button
+            class="stop"
+            onclick="disconnectScooter()"
+        >
+            ⏹ &nbsp; Verbindung trennen
+        </button>
+
+    </div>
+
+
+    <!-- DEVICE -->
+
+    <div
+        class="device"
+        id="deviceBox"
+    >
+
+        <div id="deviceName">
+            Gerät
+        </div>
+
+    </div>
+
+
+    <div
+        class="error"
+        id="error"
+    ></div>
+
+</div>
+
+
+<script>
+
+let bluetoothDevice = null;
+let qrScanner = null;
+let scooterQR = null;
+
+
+/* ==========================
+   AKKU
+========================== */
+
+function updateBattery(value) {
+
+    const battery =
+        document.getElementById("battery");
+
+    const batterySmall =
+        document.getElementById("batterySmall");
+
+    const fill =
+        document.getElementById("batteryFill");
+
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        battery.innerText = "-- %";
+
+        batterySmall.innerText = "-- %";
+
+        fill.style.width = "0%";
+
+        return;
+    }
+
+
+    battery.innerText =
+        value + " %";
+
+    batterySmall.innerText =
+        value + " %";
+
+    fill.style.width =
+        value + "%";
+}
+
+
+/* ==========================
+   QR SCANNER
+========================== */
+
+function startQRScanner() {
+
+    const reader =
+        document.getElementById("qr-reader");
+
+    reader.style.display =
+        "block";
+
+
+    if (qrScanner) {
+        return;
+    }
+
+
+    qrScanner =
+        new Html5Qrcode(
+            "qr-reader"
+        );
+
+
+    qrScanner.start(
+
+        {
+            facingMode:
+                "environment"
+        },
+
+        {
+            fps: 10,
+
+            qrbox: {
+                width: 250,
+                height: 250
+            }
+        },
+
+
+        function(decodedText) {
+
+            scooterQR =
+                decodedText;
+
+
+            document.getElementById(
+                "qrText"
+            ).innerText =
+                decodedText;
+
+
+            document.getElementById(
+                "qrResult"
+            ).style.display =
+                "block";
+
+
+            document.getElementById(
+                "status"
+            ).innerText =
+                "QR-Code erkannt";
+
+
+            stopQRScanner();
+
+        },
+
+
+        function() {
+
+            // nichts tun
+
+        }
+
+    ).catch(function(error) {
+
+        document.getElementById(
+            "error"
+        ).innerText =
+            "Kamera konnte nicht geöffnet werden: "
+            + error;
+
+    });
+}
+
+
+/* ==========================
+   QR STOP
+========================== */
+
+function stopQRScanner() {
+
+    if (!qrScanner) {
+        return;
+    }
+
+
+    qrScanner.stop()
+        .then(function() {
+
+            qrScanner.clear();
+
+            qrScanner = null;
+
+            document.getElementById(
+                "qr-reader"
+            ).style.display =
+                "none";
+
+        })
+        .catch(function(error) {
+
+            console.log(error);
+
+        });
+}
+
+
+/* ==========================
+   BLUETOOTH
+========================== */
+
+async function connectScooter() {
+
+    document.getElementById(
+        "error"
+    ).innerText = "";
+
+
+    if (!navigator.bluetooth) {
+
+        document.getElementById(
+            "status"
+        ).innerText =
+            "Bluetooth nicht unterstützt";
+
+
+        document.getElementById(
+            "online"
+        ).innerText =
+            "NICHT VERFÜGBAR";
+
+
+        document.getElementById(
+            "error"
+        ).innerText =
+            "Dieser Browser unterstützt Web Bluetooth nicht.";
+
+        return;
+    }
+
+
+    try {
+
+        document.getElementById(
+            "status"
+        ).innerText =
+            "Suche nach Geräten...";
+
+
+        document.getElementById(
+            "online"
+        ).innerText =
+            "SUCHE";
+
+
+        bluetoothDevice =
+            await navigator.bluetooth.requestDevice({
+
+                acceptAllDevices:
+                    true
+
+            });
+
+
+        const name =
+            bluetoothDevice.name ||
+            "Unbekanntes Gerät";
+
+
+        document.getElementById(
+            "status"
+        ).innerText =
+            "Gerät gefunden";
+
+
+        document.getElementById(
+            "online"
+        ).innerText =
+            "GEFUNDEN";
+
+
+        document.getElementById(
+            "deviceName"
+        ).innerText =
+            "🛴 " + name;
+
+
+        document.getElementById(
+            "deviceBox"
+        ).style.display =
+            "block";
+
+
+        document.getElementById(
+            "statusDot"
+        ).style.background =
+            "#5cff88";
+
+
+        console.log(
+            "Bluetooth-Gerät:",
+            bluetoothDevice
+        );
+
+
+        console.log(
+            "QR-Code:",
+            scooterQR
+        );
+
+    }
+
+
+    catch (error) {
+
+        console.log(error);
+
+
+        document.getElementById(
+            "status"
+        ).innerText =
+            "Verbindung abgebrochen";
+
+
+        document.getElementById(
+            "online"
+        ).innerText =
+            "OFFLINE";
+
+
+        document.getElementById(
+            "statusDot"
+        ).style.background =
+            "#606a76";
+
+
+        document.getElementById(
+            "error"
+        ).innerText =
+            error.message ||
+            "Bluetooth-Verbindung fehlgeschlagen.";
+
+    }
+}
+
+
+/* ==========================
+   TRENNEN
+========================== */
+
+function disconnectScooter() {
+
+    bluetoothDevice =
+        null;
+
+
+    document.getElementById(
+        "status"
+    ).innerText =
+        "Nicht verbunden";
+
+
+    document.getElementById(
+        "online"
+    ).innerText =
+        "OFFLINE";
+
+
+    document.getElementById(
+        "statusDot"
+    ).style.background =
+        "#606a76";
+
+
+    document.getElementById(
+        "deviceBox"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "error"
+    ).innerText =
+        "";
+
+
+    updateBattery(null);
+
+
+    document.getElementById(
+        "speed"
+    ).innerText =
+        "0.0";
+
+
+    document.getElementById(
+        "distance"
+    ).innerText =
+        "-- km";
+}
+
+</script>
+
+</body>
+</html>
